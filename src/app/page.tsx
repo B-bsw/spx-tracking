@@ -31,7 +31,7 @@ type Data = {
 export default function Page() {
     const [txtInput, setTxtInput] = useState<string | null>(null);
     const [txt, setTxt] = useState<Data | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     useEffect(() => {
         axios
             .get("/api")
@@ -41,14 +41,6 @@ export default function Page() {
             })
             .catch(console.error);
     }, []);
-
-    if (loading) {
-        return (
-            <div className="h-screen bg-zinc-100 flex items-center justify-center">
-                <div>loading...</div>
-            </div>
-        );
-    }
 
     const handleChangeTxt = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTxtInput(event.target.value.toUpperCase());
@@ -60,6 +52,7 @@ export default function Page() {
             setTxt(null);
             return;
         }
+        setLoading(true);
         axios
             .get(`/api?spx_tn=${txtInput}`)
             .then((res) => {
@@ -72,6 +65,13 @@ export default function Page() {
 
     return (
         <div className="h-screen flex flex-col justify-center items-center gap-5">
+            {loading && (
+                <div className="absolute h-screen w-screen bg-white opacity-40 flex flex-col items-center justify-center">
+                    <div className="animate-pulse text-2xl select-none">
+                        Loading...
+                    </div>
+                </div>
+            )}
             <div className="grid grid-cols-1 gap-4 h-full">
                 <div className="m-4">
                     <form onSubmit={handleSearch}>
