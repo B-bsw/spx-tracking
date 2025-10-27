@@ -57,7 +57,21 @@ export default function Page() {
         axios
             .get(`/api?spx_tn=${txtInput}`)
             .then((res) => {
-                console.log(res.data.data);
+                setTxt(res.data.data);
+                setLoading(false);
+            })
+            .catch(console.error);
+    };
+
+    const handleSearchClick = async (event: React.MouseEvent<HTMLInputElement>) => {
+        if (!txtInput?.length) {
+            setTxt(null);
+            return;
+        }
+        setLoading(true);
+        axios
+            .get(`/api?spx_tn=${txtInput}`)
+            .then((res) => {
                 setTxt(res.data.data);
                 setLoading(false);
             })
@@ -100,7 +114,7 @@ export default function Page() {
                 <div className="my-6 w-full">
                     <form onSubmit={handleSearch}>
                         <div className="flex p-6 rounded-2xl shadow-md items-center justify-center gap-2">
-                            <div className="font-medium w-fit text-nowrap">
+                            <div className="font-normal w-fit text-nowrap select-none">
                                 กรอกเลขพัสดุ
                             </div>
                             <input
@@ -108,6 +122,28 @@ export default function Page() {
                                 onChange={handleChangeTxt}
                                 className="outline-2 outline-zinc-200 focus:outline-black rounded-sm p-1 w-full"
                             />
+                            <div className="bg-zinc-100 hover:bg-zinc-200 transition-all active:scale-90 duration-300 p-2 rounded-md cursor-pointer " onClick={handleSearchClick}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    className=""
+                                >
+                                    <path
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                    />
+                                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                    <path d="M21 21l-6 -6" />
+                                </svg>
+                            </div>
                         </div>
                     </form>
                 </div>
