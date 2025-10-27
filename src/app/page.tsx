@@ -4,12 +4,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-type TrackingRecord = {
-    time: string;
-    status: string;
-    description: string;
-};
-
 type Data = {
     fulfillment_info: {
         deliver_type: number;
@@ -62,6 +56,10 @@ export default function Page() {
 
     const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!txtInput?.length) {
+            setTxt(null);
+            return;
+        }
         axios
             .get(`/api?spx_tn=${txtInput}`)
             .then((res) => {
@@ -89,7 +87,7 @@ export default function Page() {
                         </div>
                     </form>
                 </div>
-                {txt ? (
+                {txt?.sls_tracking_info.records ? (
                     txt.sls_tracking_info.records.map((items, index) => (
                         <div
                             className="p-6 shadow-md rounded-2xl flex flex-col gap-4"
@@ -118,7 +116,10 @@ export default function Page() {
                                     >
                                         <span className="text-blue-600 underline">
                                             URL ADDRESS:{" "}
-                                        {items.current_location.full_address}
+                                            {
+                                                items.current_location
+                                                    .full_address
+                                            }
                                         </span>
                                     </Link>
                                 </div>
@@ -126,7 +127,9 @@ export default function Page() {
                         </div>
                     ))
                 ) : (
-                    <div className="text-center font-bold text-5xl">no data</div>
+                    <div className="text-center font-bold text-5xl">
+                        no data
+                    </div>
                 )}
             </div>
         </div>
