@@ -96,7 +96,7 @@ export default function Page() {
                     </div>
                 </div>
             )}
-            <div className="grid grid-cols-1 gap-4 h-full">
+            <div className="grid grid-cols-1 gap-4 h-full px-4">
                 <div className="my-6 w-full">
                     <form onSubmit={handleSearch}>
                         <div className="flex p-6 rounded-2xl shadow-md items-center justify-center gap-2">
@@ -114,10 +114,10 @@ export default function Page() {
                 {txt?.sls_tracking_info.records ? (
                     txt.sls_tracking_info.records.map((items, index) => (
                         <div
-                            className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-4 divide-zinc-200"
+                            className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-4 divide-zinc-200 max-md:divide-none max-md:flex-col"
                             key={index}
                         >
-                            <div className="p-2 flex flex-col justify-center items-center font-medium">
+                            <div className="p-2 flex flex-col justify-center items-center font-medium text-nowrap max-md:items-start max-md:w-fit">
                                 <div>{changeTimeToTime(items.actual_time)}</div>
                                 <div>{changeTimeToDate(items.actual_time)}</div>
                             </div>
