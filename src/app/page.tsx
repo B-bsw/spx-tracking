@@ -3,6 +3,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { timeStamp } from "node:console";
 
 type Data = {
     fulfillment_info: {
@@ -14,7 +15,7 @@ type Data = {
         client_order_id: string;
         receiver_name: string;
         records: {
-            time: string;
+            actual_time: number;
             status: string;
             description: string;
             buyer_description: string;
@@ -63,6 +64,29 @@ export default function Page() {
             .catch(console.error);
     };
 
+    const changeTimeToTime = (timeStamp: number) => {
+        const date = new Date(timeStamp * 1000);
+
+        const time = date.toLocaleTimeString("th-TH", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+        return time;
+    };
+
+    const changeTimeToDate = (timeStamp: number) => {
+        const date = new Date(timeStamp * 1000);
+
+        const dates = date.toLocaleDateString("th-TH", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        });
+
+        return dates;
+    };
+
     return (
         <div className="h-screen flex flex-col justify-center items-center gap-5">
             {loading && (
@@ -73,7 +97,7 @@ export default function Page() {
                 </div>
             )}
             <div className="grid grid-cols-1 gap-4 h-full">
-                <div className="m-4">
+                <div className="my-6 w-full">
                     <form onSubmit={handleSearch}>
                         <div className="flex p-6 rounded-2xl shadow-md items-center justify-center gap-2">
                             <div className="font-medium w-fit text-nowrap">
@@ -90,40 +114,48 @@ export default function Page() {
                 {txt?.sls_tracking_info.records ? (
                     txt.sls_tracking_info.records.map((items, index) => (
                         <div
-                            className="p-6 shadow-md rounded-2xl flex flex-col gap-4"
+                            className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-4 divide-zinc-200"
                             key={index}
                         >
-                            <div>
-                                <span className="font-bold">Status:</span>{" "}
-                                {items.buyer_description}
+                            <div className="p-2 flex flex-col justify-center items-center font-medium">
+                                <div>{changeTimeToTime(items.actual_time)}</div>
+                                <div>{changeTimeToDate(items.actual_time)}</div>
                             </div>
-                            {items.current_location.full_address && (
+                            <div className="flex-col gap-4 flex">
                                 <div>
-                                    <span className="font-bold">Address:</span>{" "}
-                                    {items.current_location.full_address}
+                                    <span className="font-bold">Status:</span>{" "}
+                                    {items.buyer_description}
                                 </div>
-                            )}
-                            {items.current_location.lat.length > 0 && (
-                                <div>
-                                    <Link
-                                        className="bg-zinc-100 rounded-md p-1"
-                                        target="_blank"
-                                        href={`https://www.google.com/maps/search/?api=1&query=${
-                                            items.current_location.lat +
-                                            " " +
-                                            items.current_location.lng
-                                        }`}
-                                    >
-                                        <span className="text-blue-600 underline">
-                                            URL ADDRESS:{" "}
-                                            {
-                                                items.current_location
-                                                    .full_address
-                                            }
-                                        </span>
-                                    </Link>
-                                </div>
-                            )}
+                                {items.current_location.full_address && (
+                                    <div>
+                                        <span className="font-bold">
+                                            Address:
+                                        </span>{" "}
+                                        {items.current_location.full_address}
+                                    </div>
+                                )}
+                                {items.current_location.lat.length > 0 && (
+                                    <div>
+                                        <Link
+                                            className="bg-zinc-100 rounded-md p-1"
+                                            target="_blank"
+                                            href={`https://www.google.com/maps/search/?api=1&query=${
+                                                items.current_location.lat +
+                                                " " +
+                                                items.current_location.lng
+                                            }`}
+                                        >
+                                            <span className="text-blue-600 underline">
+                                                URL ADDRESS:{" "}
+                                                {
+                                                    items.current_location
+                                                        .full_address
+                                                }
+                                            </span>
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))
                 ) : (
