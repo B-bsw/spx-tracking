@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { timeStamp } from 'node:console'
 import {
     IconHomeDot,
+    IconLoader,
     IconLocation,
     IconLocationUp,
     IconPhoneCalling,
@@ -120,142 +121,153 @@ export default function Page() {
     }
 
     return (
-        <div className="flex h-screen flex-col items-center justify-center gap-5">
+        <>
             {loading && (
-                <div className="absolute flex h-screen w-screen flex-col items-center justify-center bg-white opacity-40">
-                    <div className="animate-pulse text-2xl select-none">
-                        Loading...
+                <div className="fixed flex h-screen w-screen flex-col items-center justify-center bg-white/50">
+                    <div className="animate-spin text-4xl font-bold select-none">
+                        <IconLoader className="scale-150" />
                     </div>
                 </div>
             )}
-            <div className="grid h-full max-w-6xl grid-cols-1 gap-4 px-4">
-                <div className="my-6 w-full">
-                    <form onSubmit={handleSearch}>
-                        <div className="flex items-center justify-center gap-2 rounded-2xl p-6 shadow-md max-sm:flex-col">
-                            <div className="w-fit font-medium text-nowrap select-none max-sm:text-xl">
-                                กรอกเลขพัสดุ
-                            </div>
-                            <div className="flex w-full gap-2">
-                                <input
-                                    type="text"
-                                    onChange={handleChangeTxt}
-                                    className="w-full rounded-sm p-1 outline-2 outline-zinc-200 focus:outline-zinc-500"
-                                />
-                                <div
-                                    className="cursor-pointer rounded-md bg-zinc-100 p-1.5 transition-all duration-300 hover:bg-zinc-200 active:scale-90"
-                                    onClick={handleSearchClick}
-                                >
-                                    <IconSearch />
+
+            <div className="my-10 flex h-full flex-col items-center justify-start gap-5">
+                <h1 className="text-4xl font-bold">SPX Tracking</h1>
+                <div className="grid h-full w-full max-w-6xl grid-cols-1 gap-4 px-4">
+                    <div className="w-full">
+                        <form onSubmit={handleSearch}>
+                            <div className="flex items-center justify-center gap-2 rounded-2xl p-6 shadow-md max-sm:flex-col">
+                                <div className="w-fit font-medium text-nowrap select-none max-sm:text-xl">
+                                    กรอกเลขพัสดุ
+                                </div>
+                                <div className="flex w-full gap-2">
+                                    <input
+                                        type="text"
+                                        onChange={handleChangeTxt}
+                                        className="w-full rounded-sm p-1 outline-2 outline-zinc-200 focus:outline-zinc-500"
+                                    />
+                                    <div
+                                        className="cursor-pointer rounded-md bg-zinc-100 p-1.5 transition-all duration-300 hover:bg-zinc-200 active:scale-90"
+                                        onClick={handleSearchClick}
+                                    >
+                                        <IconSearch />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                {txt?.sls_tracking_info.records ? (
-                    txt.sls_tracking_info.records.map((items, index) => (
-                        <div
-                            className="flex gap-4 divide-x-2 divide-zinc-300 rounded-2xl p-4 shadow-md max-md:flex-col max-md:divide-none"
-                            key={index}
-                        >
-                            <div className="flex items-center justify-center p-2 font-medium text-nowrap max-md:w-fit max-md:items-start max-md:gap-5 md:flex-col">
-                                <IconTimelineEventText className="text-zinc-500" />
-                                <div>{changeTimeToTime(items.actual_time)}</div>
-                                <div>{changeTimeToDate(items.actual_time)}</div>
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                <div className="flex items-start gap-2 max-md:flex-col">
-                                    <div className="flex gap-2 font-bold">
-                                        <IconPoint className="" />
-                                        Status:
-                                    </div>{' '}
-                                    {items.buyer_description}
-                                </div>
-
-                                {items.operator_phone && (
-                                    <div className="flex items-start gap-2 max-md:flex-col">
-                                        <div className="flex gap-2 font-bold">
-                                            <IconPhoneCalling />
-                                            Driver Phone:{' '}
-                                        </div>
-                                        <div className="font-normal">
-                                            {items.operator_phone}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {items.current_location.full_address && (
-                                    <div className="flex items-start gap-2 max-md:flex-col">
-                                        <div className="flex gap-2 font-bold">
-                                            <IconHomeDot className="" />
-                                            Address:
-                                        </div>{' '}
-                                        {items.current_location.full_address}
-                                    </div>
-                                )}
-
-                                {items.current_location.lat.length > 0 && (
-                                    <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
-                                        <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
-                                            <IconLocation />
-                                            Current Location:{' '}
-                                        </div>
-                                        <Link
-                                            className="inline-block rounded-md bg-zinc-100 p-1"
-                                            target="_blank"
-                                            href={`https://www.google.com/maps/search/?api=1&query=${
-                                                items.current_location.lat +
-                                                ' ' +
-                                                items.current_location.lng
-                                            }`}
-                                        >
-                                            <span className="text-sm font-bold text-blue-500 underline">
-                                                {
-                                                    items.current_location
-                                                        .full_address
-                                                }
-                                            </span>
-                                        </Link>
-                                    </div>
-                                )}
-
-                                {items.next_location.lat.length > 0 && (
-                                    <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
-                                        <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
-                                            <IconLocationUp />
-                                            Next Location:{' '}
-                                        </div>
-                                        <Link
-                                            className="inline-block rounded-md bg-zinc-100 p-1"
-                                            target="_blank"
-                                            href={`https://www.google.com/maps/search/?api=1&query=${
-                                                items.next_location.lat +
-                                                ' ' +
-                                                items.next_location.lng
-                                            }`}
-                                        >
-                                            <span className="text-sm font-bold text-blue-500 underline">
-                                                {
-                                                    items.next_location
-                                                        .full_address
-                                                }
-                                            </span>
-                                        </Link>
-                                    </div>
-                                )}
-
-                                <div className="text-md flex font-mono text-gray-300">
-                                    # {items.description}
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <div className="text-center text-5xl font-bold">
-                        no data
+                        </form>
                     </div>
-                )}
+                    {txt?.sls_tracking_info.records ? (
+                        txt.sls_tracking_info.records.map((items, index) => (
+                            <div
+                                className="flex gap-4 divide-x-2 divide-zinc-300 rounded-2xl p-4 shadow-md max-md:flex-col max-md:divide-none"
+                                key={index}
+                            >
+                                <div className="flex items-center justify-center p-2 font-semibold text-nowrap max-md:w-fit max-md:items-start max-md:gap-5 md:flex-col">
+                                    <IconTimelineEventText className="text-zinc-500" />
+                                    <div>
+                                        {changeTimeToTime(items.actual_time)}
+                                    </div>
+                                    <div>
+                                        {changeTimeToDate(items.actual_time)}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-4 justify-between">
+                                    <div className="flex items-start gap-2 max-md:flex-col">
+                                        <div className="flex gap-2 font-bold">
+                                            <IconPoint className="" />
+                                            Status:
+                                        </div>{' '}
+                                        {items.buyer_description}
+                                    </div>
+
+                                    {items.operator_phone && (
+                                        <div className="flex items-start gap-2 max-md:flex-col">
+                                            <div className="flex gap-2 font-bold">
+                                                <IconPhoneCalling />
+                                                Driver Phone:{' '}
+                                            </div>
+                                            <div className="font-normal">
+                                                {items.operator_phone}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {items.current_location.full_address && (
+                                        <div className="flex items-start gap-2 max-md:flex-col">
+                                            <div className="flex gap-2 font-bold">
+                                                <IconHomeDot className="" />
+                                                Address:
+                                            </div>{' '}
+                                            {
+                                                items.current_location
+                                                    .full_address
+                                            }
+                                        </div>
+                                    )}
+
+                                    {items.current_location.lat.length > 0 && (
+                                        <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
+                                            <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
+                                                <IconLocation />
+                                                Current Location:{' '}
+                                            </div>
+                                            <Link
+                                                className="inline-block rounded-md bg-zinc-100 p-1"
+                                                target="_blank"
+                                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                                    items.current_location.lat +
+                                                    ' ' +
+                                                    items.current_location.lng
+                                                }`}
+                                            >
+                                                <span className="text-sm font-bold text-blue-500 underline">
+                                                    {
+                                                        items.current_location
+                                                            .full_address
+                                                    }
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    )}
+
+                                    {items.next_location.lat.length > 0 && (
+                                        <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
+                                            <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
+                                                <IconLocationUp />
+                                                Next Location:{' '}
+                                            </div>
+                                            <Link
+                                                className="inline-block rounded-md bg-zinc-100 p-1"
+                                                target="_blank"
+                                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                                    items.next_location.lat +
+                                                    ' ' +
+                                                    items.next_location.lng
+                                                }`}
+                                            >
+                                                <span className="text-sm font-bold text-blue-500 underline">
+                                                    {
+                                                        items.next_location
+                                                            .full_address
+                                                    }
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    )}
+
+                                    <div className="text-md flex font-mono text-gray-300">
+                                        # {items.description}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="flex items-center justify-center rounded-2xl py-6 text-center text-5xl font-bold shadow-lg">
+                            <span className="animate-pulse">ไม่พบข้อมูล</span>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
