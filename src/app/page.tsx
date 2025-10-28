@@ -25,6 +25,12 @@ type Data = {
                 lat: string;
                 lng: string;
             };
+            next_location: {
+                full_address: string;
+                lat: string;
+                lng: string;
+                location_name: string;
+            };
         }[];
     };
 };
@@ -63,7 +69,9 @@ export default function Page() {
             .catch(console.error);
     };
 
-    const handleSearchClick = async (event: React.MouseEvent<HTMLInputElement>) => {
+    const handleSearchClick = async (
+        event: React.MouseEvent<HTMLInputElement>,
+    ) => {
         if (!txtInput?.length) {
             setTxt(null);
             return;
@@ -72,6 +80,7 @@ export default function Page() {
         axios
             .get(`/api?spx_tn=${txtInput}`)
             .then((res) => {
+                console.log(res.data);
                 setTxt(res.data.data);
                 setLoading(false);
             })
@@ -110,19 +119,22 @@ export default function Page() {
                     </div>
                 </div>
             )}
-            <div className="grid grid-cols-1 gap-4 h-full px-4">
+            <div className="grid grid-cols-1 gap-4 h-full px-4 max-w-6xl">
                 <div className="my-6 w-full">
                     <form onSubmit={handleSearch}>
                         <div className="flex p-6 rounded-2xl shadow-md items-center justify-center gap-2">
-                            <div className="font-normal w-fit text-nowrap select-none">
+                            <div className="font-medium w-fit text-nowrap select-none">
                                 กรอกเลขพัสดุ
                             </div>
                             <input
                                 type="text"
                                 onChange={handleChangeTxt}
-                                className="outline-2 outline-zinc-200 focus:outline-black rounded-sm p-1 w-full"
+                                className="outline-2 outline-zinc-200 focus:outline-zinc-500 rounded-sm p-1 w-full"
                             />
-                            <div className="bg-zinc-100 hover:bg-zinc-200 transition-all active:scale-90 duration-300 p-2 rounded-md cursor-pointer " onClick={handleSearchClick}>
+                            <div
+                                className="bg-zinc-100 hover:bg-zinc-200 transition-all active:scale-90 duration-300 p-1.5 rounded-md cursor-pointer "
+                                onClick={handleSearchClick}
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="24"
@@ -150,18 +162,20 @@ export default function Page() {
                 {txt?.sls_tracking_info.records ? (
                     txt.sls_tracking_info.records.map((items, index) => (
                         <div
-                            className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-4 divide-zinc-200 max-md:divide-none max-md:flex-col"
+                            className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-2 divide-zinc-300 max-md:divide-none max-md:flex-col"
                             key={index}
                         >
                             <div className="p-2 flex flex-col justify-center items-center font-medium text-nowrap max-md:items-start max-md:w-fit">
                                 <div>{changeTimeToTime(items.actual_time)}</div>
                                 <div>{changeTimeToDate(items.actual_time)}</div>
                             </div>
+
                             <div className="flex-col gap-4 flex">
                                 <div>
                                     <span className="font-bold">Status:</span>{" "}
                                     {items.buyer_description}
                                 </div>
+
                                 {items.current_location.full_address && (
                                     <div>
                                         <span className="font-bold">
@@ -170,10 +184,11 @@ export default function Page() {
                                         {items.current_location.full_address}
                                     </div>
                                 )}
+
                                 {items.current_location.lat.length > 0 && (
                                     <div>
                                         <Link
-                                            className="bg-zinc-100 rounded-md p-1"
+                                            className="bg-zinc-100 rounded-md p-1 inline-block "
                                             target="_blank"
                                             href={`https://www.google.com/maps/search/?api=1&query=${
                                                 items.current_location.lat +
@@ -181,8 +196,8 @@ export default function Page() {
                                                 items.current_location.lng
                                             }`}
                                         >
-                                            <span className="text-blue-600 underline">
-                                                URL ADDRESS:{" "}
+                                            <span className="font-bold text-blue-500 underline text-sm">
+                                                Current Location:{" "}
                                                 {
                                                     items.current_location
                                                         .full_address
@@ -191,6 +206,32 @@ export default function Page() {
                                         </Link>
                                     </div>
                                 )}
+
+                                {items.next_location.lat.length > 0 && (
+                                    <div>
+                                        <Link
+                                            className="bg-zinc-100 rounded-md p-1 inline-block"
+                                            target="_blank"
+                                            href={`https://www.google.com/maps/search/?api=1&query=${
+                                                items.next_location.lat +
+                                                " " +
+                                                items.next_location.lng
+                                            }`}
+                                        >
+                                            <span className="font-bold text-blue-500 underline text-sm">
+                                                Next Location:{" "}
+                                                {
+                                                    items.next_location
+                                                        .full_address
+                                                }
+                                            </span>
+                                        </Link>
+                                    </div>
+                                )}
+
+                                <div className="flex font-mono text-md text-gray-300">
+                                    # {items.description}
+                                </div>
                             </div>
                         </div>
                     ))
