@@ -135,7 +135,7 @@ export default function Page() {
                             <div className="w-fit font-medium text-nowrap select-none max-sm:text-xl">
                                 กรอกเลขพัสดุ
                             </div>
-                            <div className="flex gap-2 w-full">
+                            <div className="flex w-full gap-2">
                                 <input
                                     type="text"
                                     onChange={handleChangeTxt}
@@ -196,8 +196,9 @@ export default function Page() {
 
                                 {items.current_location.lat.length > 0 && (
                                     <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
-                                        <div>
+                                        <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
                                             <IconLocation />
+                                            Current Location:{' '}
                                         </div>
                                         <Link
                                             className="inline-block rounded-md bg-zinc-100 p-1"
@@ -209,7 +210,6 @@ export default function Page() {
                                             }`}
                                         >
                                             <span className="text-sm font-bold text-blue-500 underline">
-                                                Current Location:{' '}
                                                 {
                                                     items.current_location
                                                         .full_address
@@ -221,8 +221,9 @@ export default function Page() {
 
                                 {items.next_location.lat.length > 0 && (
                                     <div className="flex items-center gap-2 max-md:flex-col max-md:items-start">
-                                        <div>
+                                        <div className="flex flex-nowrap gap-2 font-bold text-nowrap">
                                             <IconLocationUp />
+                                            Next Location:{' '}
                                         </div>
                                         <Link
                                             className="inline-block rounded-md bg-zinc-100 p-1"
@@ -234,7 +235,6 @@ export default function Page() {
                                             }`}
                                         >
                                             <span className="text-sm font-bold text-blue-500 underline">
-                                                Next Location:{' '}
                                                 {
                                                     items.next_location
                                                         .full_address
