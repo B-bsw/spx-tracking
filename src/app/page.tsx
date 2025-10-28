@@ -4,6 +4,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { timeStamp } from "node:console";
+import {
+    IconHomeDot,
+    IconLocation,
+    IconLocationUp,
+    IconPoint,
+    IconTimelineEventText,
+} from "@tabler/icons-react";
 
 type Data = {
     fulfillment_info: {
@@ -165,28 +172,36 @@ export default function Page() {
                             className="p-4 gap-4 shadow-md rounded-2xl flex divide-x-2 divide-zinc-300 max-md:divide-none max-md:flex-col"
                             key={index}
                         >
-                            <div className="p-2 flex flex-col justify-center items-center font-medium text-nowrap max-md:items-start max-md:w-fit">
+                            <div className="p-2 flex max-sm:gap-5 sm:flex-col justify-center items-center font-medium text-nowrap max-md:items-start max-md:w-fit">
+                                <IconTimelineEventText className="text-zinc-500" />
                                 <div>{changeTimeToTime(items.actual_time)}</div>
                                 <div>{changeTimeToDate(items.actual_time)}</div>
                             </div>
 
                             <div className="flex-col gap-4 flex">
-                                <div>
-                                    <span className="font-bold">Status:</span>{" "}
+                                <div className="flex gap-2 items-start max-md:flex-col">
+                                    <div className="font-bold flex gap-2">
+                                        <IconPoint className="" />
+                                        Status:
+                                    </div>{" "}
                                     {items.buyer_description}
                                 </div>
 
                                 {items.current_location.full_address && (
-                                    <div>
-                                        <span className="font-bold">
+                                    <div className="flex gap-2 items-start max-md:flex-col">
+                                        <div className="font-bold flex gap-2">
+                                            <IconHomeDot className="" />
                                             Address:
-                                        </span>{" "}
+                                        </div>{" "}
                                         {items.current_location.full_address}
                                     </div>
                                 )}
 
                                 {items.current_location.lat.length > 0 && (
-                                    <div>
+                                    <div className="flex gap-2 items-center max-md:flex-col max-md:items-start">
+                                        <div>
+                                            <IconLocation />
+                                        </div>
                                         <Link
                                             className="bg-zinc-100 rounded-md p-1 inline-block "
                                             target="_blank"
@@ -208,7 +223,10 @@ export default function Page() {
                                 )}
 
                                 {items.next_location.lat.length > 0 && (
-                                    <div>
+                                    <div className="flex gap-2 items-center max-md:flex-col max-md:items-start">
+                                        <div>
+                                            <IconLocationUp />
+                                        </div>
                                         <Link
                                             className="bg-zinc-100 rounded-md p-1 inline-block"
                                             target="_blank"
