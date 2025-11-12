@@ -171,7 +171,7 @@ export default function Page() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-4 justify-between">
+                                <div className="flex flex-col justify-between gap-4">
                                     <div className="flex items-start gap-2 max-md:flex-col">
                                         <div className="flex gap-2 font-bold">
                                             <IconPoint className="" />
