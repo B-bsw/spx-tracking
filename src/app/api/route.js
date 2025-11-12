@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 export async function GET(request) {
-    const origin = request.headers.get('origin') || ''
+    const origin = request.headers.get('referer') || ''
 
-    const allowedOrigin = 'https://spx-tracking-express.vercel.app'
+    const allowedOrigin = 'https://spx-tracking-express.vercel.app/'
 
     if (!origin.startsWith(allowedOrigin)) {
         return Response.json({ error: 'Invalid origin' }, { status: 403 })
